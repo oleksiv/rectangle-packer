@@ -1,0 +1,31 @@
+<svg [ngStyle]="{width: width, height: height}">
+  <rect [attr.width]="width" [attr.height]="height" [attr.x]="0" [attr.y]="0" [ngStyle]="{}"
+        style="fill:#ffffff;stroke-width:4;stroke:red"/>
+  <ng-container *ngFor="let rect of rects">
+    <rect [attr.width]="rect.width" [attr.height]="rect.height" [attr.x]="rect.x" [attr.y]="rect.y"
+          [ngStyle]="{fill: rect.shred ? '#ccc' : '#fff'}"
+          style="stroke-width:1;stroke:rgb(0,0,0)" class="main-rect"></rect>
+
+    <ng-container *ngIf="rect.width > 50 && rect.height > 50">
+      <text [attr.x]="rect.x + (rect.width / 2)" [attr.y]="rect.y + 20" dominant-baseline="middle"
+            text-anchor="middle">{{rect.width}}
+        mm
+      </text>
+
+      <text [attr.x]="rect.x + rect.width - 20" [attr.y]="rect.y + rect.height / 2" style="writing-mode: tb;" dominant-baseline="middle"
+            text-anchor="middle">{{rect.height}}
+        mm
+      </text>
+
+      <text [attr.x]="rect.x + (rect.width / 2)" [attr.y]="rect.y + (rect.height / 2)" dominant-baseline="middle"
+            text-anchor="middle" *ngIf="rect.shred">Обрізок
+      </text>
+    </ng-container>
+
+    <rect *ngIf="rect.left" [attr.width]="10" [attr.height]="rect.height" [attr.x]="rect.x" [attr.y]="rect.y" style="fill:blue"></rect>
+    <rect *ngIf="rect.right" [attr.width]="10" [attr.height]="rect.height" [attr.x]="rect.x + rect.width - 10" [attr.y]="rect.y" style="fill:blue"></rect>
+    <rect *ngIf="rect.top" [attr.width]="rect.width" [attr.height]="10" [attr.x]="rect.x" [attr.y]="rect.y" style="fill:blue"></rect>
+    <rect *ngIf="rect.bottom" [attr.width]="rect.width" [attr.height]="10" [attr.x]="rect.x" [attr.y]="rect.y + rect.height - 10" style="fill:blue"></rect>
+
+  </ng-container>
+</svg>

@@ -1,1 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/scss/bootstrap";
+
+canvas {
+  max-width: 100%;
+  border: 2px solid red;
+}
+
+svg {
+  display: block;
+}

@@ -74,9 +74,12 @@
     </ng-container>
   </form>
 
+
   <ng-container *ngIf="packer$ | async as packer">
-    <app-canvas *ngFor="let bin of packer.bins" [rects]="bin.rects" [freeRects]="bin.freeRects" [height]="bin.height" [width]="bin.width"></app-canvas>
+    <app-canvas *ngFor="let bin of packer.bins" [lines]="lines$ | async" [rects]="bin.rects" [freeRects]="bin.freeRects" [height]="bin.height" [width]="bin.width"></app-canvas>
   </ng-container>
+
+  <h1 class="text-success">Довжина лінії розрізу - {{length$ | async}}мм</h1>
 
 
 </div>

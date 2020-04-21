@@ -10,6 +10,7 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() width: number;
   @Input() height: number;
   @Input() rects: any[];
+  @Input() lines: any[];
   @Input() freeRects: any[];
 
   constructor() {

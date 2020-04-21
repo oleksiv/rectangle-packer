@@ -13,6 +13,8 @@ export class AppComponent implements OnInit {
   @ViewChild('wrapper', {read: ElementRef, static: false}) wrapper: ElementRef;
   form: FormGroup;
   packer$: Observable<MaxRectsPacker>;
+  lines$: Observable<any>;
+  length$: Observable<any>;
 
   constructor(private fb: FormBuilder, private renderer2: Renderer2) {
     this.form = this.fb.group({
@@ -100,6 +102,117 @@ export class AppComponent implements OnInit {
         }
         return packer;
       })
+    );
+
+    this.lines$ = this.packer$.pipe(
+      map(packer => {
+        const rects = packer.bins.map(bin => bin.rects.filter((rect: any) => !rect.shred)).flat();
+
+
+        const arr2 = [];
+
+        rects.forEach(a => {
+          // horizontal top
+          arr2.push({
+            x: a.x,
+            y: a.y,
+            x1: a.x + a.width,
+            y1: a.y,
+          });
+          // horizontal bottom
+          arr2.push({
+            x: a.x,
+            y: a.y + a.height,
+            x1: a.x + a.width,
+            y1: a.y + a.height,
+          });
+
+          // vertical left
+          arr2.push({
+            x: a.x,
+            y: a.y,
+            x1: a.x,
+            y1: a.y + a.height,
+          });
+
+          // vertical right
+          arr2.push({
+            x: a.x + a.width,
+            y: a.y,
+            x1: a.x + a.width,
+            y1: a.y + a.height,
+          });
+        });
+
+
+        const arr3 = [];
+
+        arr2.forEach(a => {
+          const res = arr3.find(c => Array.isArray(c) ? c.some(b => {
+
+            // vertical
+            if (b.x === b.x1 && a.x === a.x1) {
+              if (a.x === b.x) {
+                if ((a.y <= b.y1) && (a.y1 >= b.y)) {
+                  return true;
+                }
+              }
+            } else if (b.y === b.y1 && a.y === a.y1) {
+              if (a.y === b.y) {
+                if ((a.x <= b.x1) && (a.x1 >= b.x)) {
+                  return true;
+                }
+              }
+            }
+
+            return false;
+          }) : false);
+
+          if (res) {
+            res.push(a);
+          } else {
+            arr3.push([a]);
+          }
+        });
+
+
+        return arr3.map(a => a.reduce((acc, curr) => {
+          if (Object.keys(acc).length === 0) {
+            acc = {...curr};
+          }
+
+          if (acc.x > curr.x) {
+            acc.x = curr.x;
+          }
+
+          if (acc.y > curr.y) {
+            acc.y = curr.y;
+          }
+
+          if (acc.x1 < curr.x1) {
+            acc.x1 = curr.x1;
+          }
+
+          if (acc.y1 < curr.y1) {
+            acc.y1 = curr.y1;
+          }
+
+          return acc;
+        }, {}));
+      })
+    );
+
+    this.length$ = this.lines$.pipe(
+      map(lines => lines.map(b => {
+        // vertical
+        if (b.x === b.x1) {
+          return b.y1 - b.y;
+        }
+
+        return b.x1 - b.x;
+      }).reduce((acc, curr) => {
+        return acc + curr;
+      }, 0))
     );
   }
 

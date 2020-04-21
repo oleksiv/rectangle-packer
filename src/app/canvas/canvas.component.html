@@ -27,5 +27,7 @@
     <rect *ngIf="rect.top" [attr.width]="rect.width" [attr.height]="10" [attr.x]="rect.x" [attr.y]="rect.y" style="fill:blue"></rect>
     <rect *ngIf="rect.bottom" [attr.width]="rect.width" [attr.height]="10" [attr.x]="rect.x" [attr.y]="rect.y + rect.height - 10" style="fill:blue"></rect>
 
+    <line *ngFor="let line of lines" [attr.x1]="line.x" [attr.y1]="line.y" [attr.x2]="line.x1" [attr.y2]="line.y1" stroke="green" stroke-opacity="0.1" stroke-width="10" />
+
   </ng-container>
 </svg>
